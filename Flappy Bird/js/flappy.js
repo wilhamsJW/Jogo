@@ -40,6 +40,7 @@ function Barreira(reversa = false) {
     this.elemento.appendChild(reversa ? corpo : borda)
     this.elemento.appendChild(reversa ? borda : corpo)
 
+    // Função que define a altura superior e inferior do corpo do cano, essa 
     this.setAltura = altura => corpo.style.height = `${altura}px`
 }
 
@@ -51,7 +52,7 @@ function ParDeBarreiras (altura, abertura, x) { /**
     X = posição ou seja aonde os canos irão aparecer na tela, eles não podem aparecer
     no inicio pq no inicio é o local q o passáro irá começar para adentrar nos canos, então deve haver um espaço para manobragem inicial do passáro 
 
-    altura = cooresponde a altura de um cano para o outro, porém essa altura é definida no css com justify-content: space-between;
+    altura = cooresponde a altura do cano superior e inferior que é feito mediante um cálculo
     
     abertura = é abertura de um cano para o outro q tbm na sua maior parte é definida com CSS, com justify-content: space-between; 
     */
@@ -61,6 +62,7 @@ function ParDeBarreiras (altura, abertura, x) { /**
 
     this.superior = new Barreira(true)
     this.inferior = new Barreira(false)
+    this.inferior = new Barreira()
 
     // Acrescentando as duas barreiras na div 'par-de-barreiras', as duas barreiras estão sendo construidas pela função construtora 
     // Barreira() q está acima
@@ -68,12 +70,15 @@ function ParDeBarreiras (altura, abertura, x) { /**
     this.elemento.appendChild(this.inferior.elemento)
 
     this.sortearAbertura = () => {
+        // Math.random() - Fica gerando números abaixo de zero aleatŕorios a cada refresh, dessa forma 0,987534539
+        // A cada número diferente gerado e multiplicado por altura - abertura irá dá uma localização diferente aos canos
+        // fazendo com que os canos se mecham constantemente se a página for recarregada
         const alturaSuperior = Math.random() * (altura - abertura)
 
         const alturaInferior = altura - abertura - alturaSuperior
 
+        // Enviando altura para a função q irá setar a altura do corpo do meu cano
         this.superior.setAltura(alturaSuperior)
-
         this.inferior.setAltura(alturaInferior)
     }
 
