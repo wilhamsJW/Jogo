@@ -44,6 +44,7 @@ function Barreira(reversa = false) {
     this.setAltura = altura => corpo.style.height = `${altura}px`
 }
 
+// Abaixo temos um teste para ver só como ficou as barreiras
 // const b = new Barreira(true)
 // b.setAltura(200)
 // document.querySelector('[tp-flappy]').appendChild(b.elemento)
@@ -62,7 +63,6 @@ function ParDeBarreiras (altura, abertura, x) { /**
 
     this.superior = new Barreira(true)
     this.inferior = new Barreira(false)
-    this.inferior = new Barreira()
 
     // Acrescentando as duas barreiras na div 'par-de-barreiras', as duas barreiras estão sendo construidas pela função construtora 
     // Barreira() q está acima

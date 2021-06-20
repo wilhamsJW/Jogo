@@ -28,7 +28,8 @@ body {
     src: url('../fonts/Pixel.ttf');
 }
 
-
+/* [tp-flappy] apenas uma forma diferente para selecionar um atributo, poderíamos usar um ID tbm, mas no html está dessa forma
+então vamos pegar assim para testarmos algo diferente */
 [tp-flappy] {
     position: relative;
     border: 5px solid dodgerblue;
