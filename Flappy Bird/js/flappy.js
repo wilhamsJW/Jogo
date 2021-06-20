@@ -84,6 +84,7 @@ function ParDeBarreiras (altura, abertura, x) { /**
 
     this.getX = () => parent(this.elemento.style.left.split('px'))
 
+    // Aqui está setando um margin left para que os canos não apareçam no inicio demais da tela ou no fim demais da tela
     this.setX = x => this.elemento.style.left = `${x}px`
 
     this.getLargura = () => this.elemento.clientWidth
