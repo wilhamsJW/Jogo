@@ -106,6 +106,7 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
         new ParDeBarreiras(altura, abertura, largura + espaco * 3)
     ]
 
+    // Responsável tbm pela velocidade do jogo, o setIntervall se alterado tbm aceleta o jogo
     const deslocamento = 3
 
     this.animar = () => {
@@ -114,10 +115,9 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
             // par.setX() é apenas a função que está em ParDeBarreiras acima e par.getX() também
             par.setX(par.getX() - deslocamento)
 
+            // Fazendo com que as colunas sejam reaproveitas e passem uma após a outra
             if (par.getX() < par.getLargura() ) {
-                
                 par.setX(par.getX() + espaco * this.pares.length )
-                console.log('par.setX()',par.setX())
                 par.sortearAbertura()
             }
 
