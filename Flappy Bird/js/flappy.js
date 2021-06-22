@@ -124,25 +124,76 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
             const meio = largura / 2
             const cruzouOMeio = par.getX() + deslocamento >= meio
              && par.getX() < meio
-            if (cruzouOMeio) notificarPonto()
+            // if (cruzouOMeio) notificarPonto()
         })
     }
 }
 
+// *** Testes para o que foi feito até agora  
+
 // Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
-const barreiras = new Barreiras(700, 1200, 200, 400)
-console.log('barreiras antes do for each', barreiras.pares)
+// const barreiras = new Barreiras(700, 1200, 200, 400)
+// console.log('barreiras antes do for each', barreiras.pares)
 // Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
-const areaDoJogo = document.querySelector('[tp-flappy]')
+// const areaDoJogo = document.querySelector('[tp-flappy]')
 // Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
 // da const barreiras
-barreiras.pares.forEach(par => {
-    areaDoJogo.appendChild(par.elemento)
-    console.log('par.elemento', par.elemento)
-})
+// barreiras.pares.forEach(par => {
+//     areaDoJogo.appendChild(par.elemento)
+//     console.log('par.elemento', par.elemento)
+// })
 
 // setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
 // 1 segundo equivale a 1000 milésimos de segundos
-var on = setInterval( () => {
+// setInterval( () => {
+//     barreiras.animar()
+// }, 20)
+
+// *** Fim dos testes para o que foi feito até agora  
+
+
+// Function Contrutora do passáro
+
+function Passaro(alturaJogo) {
+    let voando = false
+
+    this.elemento = novoElemento('img', 'passaro')
+    this.elemento.src = 'imagens/passaro.png'
+
+    this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
+    this.setY = y => this.elemento.style.bottom = `${y}px`
+
+    window.onkeydown = e => voando = true
+    window.onkeyup = e => voando = false
+
+    this.animar = () => {
+        const novoY = this.getY() + (voando ? 8 : -5 )
+        const alturMaxima = alturaJogo - this.elemento.clientHeight
+
+
+        if (novoY <= 0) { /** novoY é a posição do passaro se for igual ou menor q 0, quer dizer que
+            não foi setado ainda, então colocamos ele para 0 */
+            this.setY(0)
+        } else if (novoY >= alturMaxima) { /** Se for maior q altura máxima permitida, a gente seta
+            de novo para a altura maxima permitida para que ele não passe da altura especificada */
+            this.setY(alturMaxima)
+        } else { /** e se ele não viola nehuma das opções acima aí sim setamos o no novoY */
+            this.setY(novoY)
+        }
+
+    }
+
+    // definindo a altura do passáro em PX
+    this.setY(alturaJogo / 2)
+}
+
+const barreiras = new Barreiras(700, 1200, 200, 400)
+const passaro = new Passaro(700)
+const areaDoJogo = document.querySelector('[tp-flappy]')
+// areaDoJogo.appendChild(new Progresso().elemento)
+areaDoJogo.appendChild(passaro.elemento)
+barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+setInterval( () =>{
     barreiras.animar()
-}, 20)
+    passaro.animar()
+}, 20 )
