@@ -49,6 +49,7 @@ function Barreira(reversa = false) {
 // b.setAltura(200)
 // document.querySelector('[tp-flappy]').appendChild(b.elemento)
 
+// Responsável por receber os parãmetros para criar barreiras
 function ParDeBarreiras (altura, abertura, x) { /** 
     X = posição ou seja aonde os canos irão aparecer na tela, eles não podem aparecer
     no inicio pq no inicio é o local q o passáro irá começar para adentrar nos canos, então deve haver um espaço para manobragem inicial do passáro 
@@ -82,7 +83,7 @@ function ParDeBarreiras (altura, abertura, x) { /**
         this.inferior.setAltura(alturaInferior)
     }
 
-    this.getX = () => parent(this.elemento.style.left.split('px'))
+    this.getX = () => parseInt(this.elemento.style.left.split('px'))
 
     // Aqui está setando um margin left para que os canos não apareçam no inicio demais da tela ou no fim demais da tela
     this.setX = x => this.elemento.style.left = `${x}px`
@@ -93,5 +94,55 @@ function ParDeBarreiras (altura, abertura, x) { /**
     this.setX(x)
 }
 
-const b = new ParDeBarreiras(700, 400, 800)
-document.querySelector('[tp-flappy]').appendChild(b.elemento)
+// Teste para testar ParDeBarreiras e Barreira
+// const b = new ParDeBarreiras(700, 400, 800)
+// document.querySelector('[tp-flappy]').appendChild(b.elemento)
+
+function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
+    this.pares = [
+        new ParDeBarreiras(altura, abertura, largura),
+        new ParDeBarreiras(altura, abertura, largura + espaco),
+        new ParDeBarreiras(altura, abertura, largura + espaco * 2),
+        new ParDeBarreiras(altura, abertura, largura + espaco * 3)
+    ]
+
+    const deslocamento = 3
+
+    this.animar = () => {
+        this.pares.forEach(par => {
+            
+            // par.setX() é apenas a função que está em ParDeBarreiras acima e par.getX() também
+            par.setX(par.getX() - deslocamento)
+
+            if (par.getX() < par.getLargura() ) {
+                
+                par.setX(par.getX() + espaco * this.pares.length )
+                console.log('par.setX()',par.setX())
+                par.sortearAbertura()
+            }
+
+            const meio = largura / 2
+            const cruzouOMeio = par.getX() + deslocamento >= meio
+             && par.getX() < meio
+            if (cruzouOMeio) notificarPonto()
+        })
+    }
+}
+
+// Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
+const barreiras = new Barreiras(700, 1200, 200, 400)
+console.log('barreiras antes do for each', barreiras.pares)
+// Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
+const areaDoJogo = document.querySelector('[tp-flappy]')
+// Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
+// da const barreiras
+barreiras.pares.forEach(par => {
+    areaDoJogo.appendChild(par.elemento)
+    console.log('par.elemento', par.elemento)
+})
+
+// setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
+// 1 segundo equivale a 1000 milésimos de segundos
+var on = setInterval( () => {
+    barreiras.animar()
+}, 20)
