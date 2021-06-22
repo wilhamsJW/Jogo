@@ -183,6 +183,9 @@ function Passaro(alturaJogo) {
         // Define a velocidade que o passáro voa e a velocidade que o passáro cai
         // Estou somando this.getY() que representa a o botom do passáro ou seja a distançia dele para o fim da tela
         // estou somando com 8 e depois com -5
+        // this.getY() + (voando ? 8 : -5 ) -> estou somando com 8 e somando com -5
+        // this.getY() obtém o bottom do passáro ou a distãncia dele do fim da tela, etnão se somo com 8 isso aumentará os pixels
+        // se somo com -5 isso negativará o bottom, fazendo com que o passáro fique no fim da tela
         const novoY = this.getY() + (voando ? 8 : -5 )
 
         // this.elemento.clientHeight me retorna a altura q o passaro se encontra, sem pegar o clienteHeight do elemento o elemento passáro
