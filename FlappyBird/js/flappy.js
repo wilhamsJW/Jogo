@@ -155,30 +155,54 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
 // Function Contrutora do passáro
 
 function Passaro(alturaJogo) {
+    // Flag q valida o voou do passsáro
     let voando = false
 
     this.elemento = novoElemento('img', 'passaro')
     this.elemento.src = "./FlappyBird/imagens/passaro.png"
 
-    this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
+    // A função parseInt() converte para string
+    // this.getY está aqui para pegar o style.bottom, ou seja pegar os pixels dele, mas se simplesmente tentar pegar dessa forma:
+    // this.elemento.style.bottom - Não irei conseguir, dê um console e veja se o log retorna algo para verificação
+    // então parseInt() me retorna a string e com uma string eu consigo pegar os valores e usar funções nativas para strings como o split por exemplo
+    // Sem o parseInt eu não conseguiria acessar esses valores, foi preciso converter para uma string
+    // O código original já veio com esse split('x')[0] e não vi a necessidade dele aí, retirei e o código até aqui funcionou normalmente, resolvi deixalo mesmo assim
+    this.getY = () => parseInt(this.elemento.style.bottom.split('x')[0])
+
+    console.log('this.elemento', this.elemento)
+
     this.setY = y => this.elemento.style.bottom = `${y}px`
 
+    // Capturando eventos de teclas
     window.onkeydown = e => voando = true
     window.onkeyup = e => voando = false
 
     this.animar = () => {
+        console.log('this,getY', this.getY())
+        console.log('this.setY', this.setY())
         const novoY = this.getY() + (voando ? 8 : -5 )
+
+        // this.elemento.clientHeight me retorna a altura q o passaro se encontra, sem pegar o clienteHeight do elemento o elemento passáro
+        // iria sumir da minha tela na parte de cima, então pegar a alturaJogo q é altura definida - this.elemento.clientHeight faz com o que
+        // o passáro não passe da altura que eu definir da tela
         const alturMaxima = alturaJogo - this.elemento.clientHeight
 
-
+        // Essas validações manipula toda a ação do passáro
         if (novoY <= 0) { /** novoY é a posição do passaro se for igual ou menor q 0, quer dizer que
-            não foi setado ainda, então colocamos ele para 0 */
+            não foi setado ainda, então colocamos ele para 0, ou seja no momento que o passáro está parado nós estamos setando ele para 0 
+            para que ele não cai até o fim da tela como se estivesse sumido*/
             this.setY(0)
-        } else if (novoY >= alturMaxima) { /** Se for maior q altura máxima permitida, a gente seta
+            // console.log('if - 01', novoY)
+        } 
+        else if (novoY >= alturMaxima) { /** Se for maior q altura máxima permitida, a gente seta
             de novo para a altura maxima permitida para que ele não passe da altura especificada */
             this.setY(alturMaxima)
-        } else { /** e se ele não viola nehuma das opções acima aí sim setamos o no novoY */
+            // console.log('if - 02')
+
+        } 
+        else { /** e se ele não viola nehuma das opções acima aí sim setamos o no novoY */
             this.setY(novoY)
+            // console.log('if - 03')
         }
 
     }
@@ -190,6 +214,7 @@ function Passaro(alturaJogo) {
 // Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
 const barreiras = new Barreiras(700, 1200, 200, 400)
 
+// Criando passaro e passando a altura do jogo com parãmetro
 const passaro = new Passaro(700)
 
 // Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
