@@ -187,12 +187,23 @@ function Passaro(alturaJogo) {
     this.setY(alturaJogo / 2)
 }
 
+// Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
 const barreiras = new Barreiras(700, 1200, 200, 400)
+
 const passaro = new Passaro(700)
+
+// Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
 const areaDoJogo = document.querySelector('[tp-flappy]')
-// areaDoJogo.appendChild(new Progresso().elemento)
+
+// Adicionando com appendChild o passaro na tela
 areaDoJogo.appendChild(passaro.elemento)
+
+// Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
+// da const barreiras
 barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+
+// setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
+// 1 segundo equivale a 1000 milésimos de segundos
 setInterval( () =>{
     barreiras.animar()
     passaro.animar()
