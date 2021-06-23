@@ -184,21 +184,24 @@ function Passaro(alturaJogo) {
         // Estou somando this.getY() que representa a o botom do passáro ou seja a distançia dele para o fim da tela
         // estou somando com 8 e depois com -5
         // this.getY() + (voando ? 8 : -5 ) -> estou somando com 8 e somando com -5
-        // this.getY() obtém o bottom do passáro ou a distãncia dele do fim da tela, etnão se somo com 8 isso aumentará os pixels
+        // this.getY() obtém o bottom do passáro ou a distãncia dele do fim da tela, e então se somo com 8 isso aumentará os pixels
         // se somo com -5 isso negativará o bottom, fazendo com que o passáro fique no fim da tela
-        const novoY = this.getY() + (voando ? 8 : -5 )
+        // voando ? 8 : -5 = siginifica dizer que se a flag voando tiver true irei acrescentar 8px a cada tecla acionada
+        // sendo vista pelo window.onkeydown ou seja isso fará com que o passáro suba de 8px em 8px se aumento esse número o passáro
+        // subirá mais rápido pois terá mais pixels
+        //  -5  -> o -5 indica q ele irá descer de -5px em -5px
+        const novoY = this.getY() + (voando ? 8 : -4 ) // manipula toda a ação do passáro
 
         // this.elemento.clientHeight me retorna a altura q o passaro se encontra, sem pegar o clienteHeight do elemento o elemento passáro
         // iria sumir da minha tela na parte de cima, então pegar a alturaJogo q é altura definida - this.elemento.clientHeight faz com o que
         // o passáro não passe da altura que eu definir da tela
         const alturMaxima = alturaJogo - this.elemento.clientHeight
 
-        // Essas validações manipula toda a ação do passáro
+        // manipula toda a ação do passáro
         if (novoY <= 0) { /** novoY é a posição do passaro se for igual ou menor q 0, quer dizer que
             não foi setado ainda, então colocamos ele para 0, ou seja no momento que o passáro está parado nós estamos setando ele para 0 
             para que ele não cai até o fim da tela como se estivesse sumido*/
             this.setY(0)
-            console.log('if - 01', novoY)
         } 
         else if (novoY >= alturMaxima) { /** 
             Lembrete: Chegamos a definição abaixo pq novoY armazena this.getY() e this.getY() obtém o bottom do passáro ou seja
@@ -208,17 +211,18 @@ function Passaro(alturaJogo) {
             de novo para a altura maxima permitida para que ele não passe da altura especificada, dessa forma ele fica travado lá em cima da tela mas nã passa
             da altura definida */
             this.setY(alturMaxima)
-            console.log('if - 02',novoY)
-            console.log('if - 02 alturMaxima',alturMaxima)
 
         } 
         else { /** e se ele não viola nehuma das opções acima aí sim setamos o novoY 
             ou seja se ele estiver subindo ou caindo sem ou com a tecla pressionada irá cair aqui
-            e se a tecla não tiver pressionada siginida q flag voando é false, estão estou resetando o passaro para novoY
+            e se a tecla não tiver pressionada siginifica q flag voando é false, estão estou resetando o passaro para novoY
             que significa -5 de acordo com o valor acima de novoY
+
+            this.setY(novoY) => é a chamada principal para que o passáro voe, passando novoY como parãmetro estou 
+            dizendo a posição que o passáro deve estar, pq o novoY que detecta isso
+            leia acima as explicações de novoY
             */
             this.setY(novoY)
-            console.log('if - 03',novoY)
         }
 
     }
