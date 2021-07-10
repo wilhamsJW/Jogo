@@ -162,7 +162,7 @@ function Passaro(alturaJogo) {
         // sendo vista pelo window.onkeydown ou seja isso fará com que o passáro suba de 8px em 8px se aumento esse número o passáro
         // subirá mais rápido pois terá mais pixels
         //  -5  -> o -5 indica q ele irá descer de -5px em -5px
-        const novoY = this.getY() + (voando ? 8 : -4 ) // manipula toda a ação do passáro
+        const novoY = this.getY() + (voando ? 5 : -4 ) // manipula toda a ação do passáro
 
         // this.elemento.clientHeight me retorna a altura q o passaro se encontra, sem pegar o clienteHeight do elemento o elemento passáro
         // iria sumir da minha tela na parte de cima, então pegar a alturaJogo q é altura definida - this.elemento.clientHeight faz com o que
@@ -220,6 +220,34 @@ function Progresso() {
     this.atualizarPontos(0)
 }
 
+// Responsável pela coalisão do passaro entre a barreira
+function estaoSobrePostos(elementoA, elementoB) {
+    const a = elementoA.getBoundingClientRect()
+    const b = elementoB.getBoundingClientRect()
+
+    const honrizontal = a.left + a.width >= b.left && b.left + a.left
+    const vertical = a.top + a.height >= b.top && b.top + b.height >= a.top
+
+    return honrizontal && vertical
+}
+
+function colidiu(passaro, barreiras) {
+    let colidiu = false
+
+    barreiras.pares.forEach(parDeBarreiras => {
+        if(!colidiu) {
+
+            const superior = parDeBarreiras.superior.elemento
+            const inferior = parDeBarreiras.inferior.elemento
+    
+            colidiu = estaoSobrePostos(passaro.elemento, superior) 
+                || estaoSobrePostos(passaro.elemento, inferior)
+        }
+    })
+
+    return colidiu
+}
+
 function FlappyBird() {
     // Controla a pontuação do jogo
     let pontos = 0
@@ -256,6 +284,10 @@ function FlappyBird() {
         const temporizador = setInterval(() => {
             barreiras.animar()
             passaro.animar()
+
+            if (colidiu(passaro, barreiras)) {
+                clearInterval(temporizador)
+            }
         }, 20)
     }
 }
