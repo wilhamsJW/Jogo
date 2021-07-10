@@ -90,6 +90,10 @@ function ParDeBarreiras (altura, abertura, x) { /**
 }
 
 function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
+
+    // notificarPonto se trata de uma função definida na função FlappyBird abaixo, lá eu envio um arrow function
+    // que é recebida aqui e usada no seguinte if: if (cruzouOMeio) notificarPonto()
+
     this.pares = [
         new ParDeBarreiras(altura, abertura, largura),
         new ParDeBarreiras(altura, abertura, largura + espaco),
@@ -103,10 +107,10 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     this.animar = () => {
         this.pares.forEach(par => {
             
-            // par.setX() é apenas a função que está em ParDeBarreiras acima e par.getX() também
+            // par.setX() é apenas a função que está em ParDeBarreiras acima e par.getX() também.
             par.setX(par.getX() - deslocamento)
 
-            // Fazendo com que as colunas sejam reaproveitas e passem uma após a outra
+            // Fazendo com que as colunas sejam reaproveitadas e passem uma após a outra
             if (par.getX() < par.getLargura() ) {
                 par.setX(par.getX() + espaco * this.pares.length )
                 par.sortearAbertura()
@@ -115,7 +119,7 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
             const meio = largura / 2
             const cruzouOMeio = par.getX() + deslocamento >= meio
              && par.getX() < meio
-            // if (cruzouOMeio) notificarPonto()
+            if (cruzouOMeio) notificarPonto()
         })
     }
 }
@@ -201,25 +205,85 @@ function Passaro(alturaJogo) {
     this.setY(alturaJogo / 2)
 }
 
-// Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
-const barreiras = new Barreiras(700, 1200, 200, 400)
+// Responsável por criar o elemento na tela de pontuação do jogo
+function Progresso() {
 
-// Criando passaro e passando a altura do jogo com parãmetro
-const passaro = new Passaro(700)
+    // span é uma div do Html e 'progresso' é uma classe já definida no CSS, obs: todo o html está sendo implementado via JS
+    this.elemento = novoElemento('span', 'progresso')
 
-// Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
-const areaDoJogo = document.querySelector('[tp-flappy]')
+    // this.elemento.innerHTML -> estou acessando o this.elemento que é a linha acima que contém a div e a class e estou inserindo
+    // na minha tela com innerHTML, apenas se colocasse this.elemento.innerHTML = 'qualquer coisa', iria aparecer na tela
+    // mas coloquei dentro de uma função que recebe pontos e insere pontos na tela para que a pontuação fique sendo dinãmica
+    this.atualizarPontos = pontos => {
+        this.elemento.innerHTML = pontos
+    }
+    this.atualizarPontos(0)
+}
 
-// Adicionando com appendChild o passaro na tela
-areaDoJogo.appendChild(passaro.elemento)
+function FlappyBird() {
+    // Controla a pontuação do jogo
+    let pontos = 0
 
-// Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
-// da const barreiras
-barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+    // document.querySelector('[tp-flappy]') -> capturando o tp-flappy que está no html e coonresponde a toda a tela do browser
+    // clientHeight e clientWidth é do própria API do JS (qq coisa é só verificar no mozila)
+    const areaDoJogo = document.querySelector('[tp-flappy]')
+    const altura = areaDoJogo.clientHeight
+    const largura = areaDoJogo.clientWidth
 
-// setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
-// 1 segundo equivale a 1000 milésimos de segundos
-setInterval( () =>{
-    barreiras.animar()
-    passaro.animar()
-}, 20 )
+    // Apenas guardando a função construtora em uma const chamada progresso e usando ela logo abaixo
+    const progresso = new Progresso()
+
+    // Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
+    const barreiras = new Barreiras(altura, largura, 200, 400,
+        () => progresso.atualizarPontos(++pontos))
+
+    const passaro = new Passaro(altura)
+
+    // Adicionando a pontuação do jogo na tela
+    areaDoJogo.appendChild(progresso.elemento)
+
+    // Adicionando com appendChild o passaro na tela
+    areaDoJogo.appendChild(passaro.elemento)
+
+
+    // Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
+    // da const barreiras
+    barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+
+    // setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
+    // 1 segundo equivale a 1000 milésimos de segundos
+    this.start = () => {
+        const temporizador = setInterval(() => {
+            barreiras.animar()
+            passaro.animar()
+        }, 20)
+    }
+}
+
+new FlappyBird().start()
+
+// // Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
+// const barreiras = new Barreiras(700, 1200, 200, 400)
+
+// // Criando passaro e passando a altura do jogo com parãmetro
+// const passaro = new Passaro(700)
+
+// // Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
+// const areaDoJogo = document.querySelector('[tp-flappy]')
+
+// // Adicionando com appendChild o passaro na tela
+// areaDoJogo.appendChild(passaro.elemento)
+
+// // Adicionando a pontuação do jogo na tela
+// areaDoJogo.appendChild(new Progresso().elemento)
+
+// // Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
+// // da const barreiras
+// barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+
+// // setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
+// // 1 segundo equivale a 1000 milésimos de segundos
+// setInterval( () =>{
+//     barreiras.animar()
+//     passaro.animar()
+// }, 20 )
