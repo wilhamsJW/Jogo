@@ -44,11 +44,6 @@ function Barreira(reversa = false) {
     this.setAltura = altura => corpo.style.height = `${altura}px`
 }
 
-// Abaixo temos um teste para ver só como ficou as barreiras
-// const b = new Barreira(true)
-// b.setAltura(200)
-// document.querySelector('[tp-flappy]').appendChild(b.elemento)
-
 // Responsável por receber os parãmetros para criar barreiras
 function ParDeBarreiras (altura, abertura, x) { /** 
     X = posição ou seja aonde os canos irão aparecer na tela, eles não podem aparecer
@@ -94,10 +89,6 @@ function ParDeBarreiras (altura, abertura, x) { /**
     this.setX(x)
 }
 
-// Teste para testar ParDeBarreiras e Barreira
-// const b = new ParDeBarreiras(700, 400, 800)
-// document.querySelector('[tp-flappy]').appendChild(b.elemento)
-
 function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     this.pares = [
         new ParDeBarreiras(altura, abertura, largura),
@@ -106,7 +97,7 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
         new ParDeBarreiras(altura, abertura, largura + espaco * 3)
     ]
 
-    // Responsável tbm pela velocidade do jogo, o setIntervall se alterado tbm aceleta o jogo
+    // Responsável tbm pela velocidade do jogo, o setIntervall se alterado tbm acelera o jogo
     const deslocamento = 3
 
     this.animar = () => {
@@ -128,29 +119,6 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
         })
     }
 }
-
-// *** Testes para o que foi feito até agora  
-
-// Armazenando as Barreiras construídas nessa const barreiras abaixo, vale lembar que aqui eu tenho tudo sobre a barreira inclusive o HTML
-// const barreiras = new Barreiras(700, 1200, 200, 400)
-// console.log('barreiras antes do for each', barreiras.pares)
-// Selecionando o seletor [tp-flappy] do html para inserir as barreiras na tela
-// const areaDoJogo = document.querySelector('[tp-flappy]')
-// Preciso da um forEach para percorrer todos os campos do meu array e dentro do forEach eu adicionei cada barreira construída
-// da const barreiras
-// barreiras.pares.forEach(par => {
-//     areaDoJogo.appendChild(par.elemento)
-//     console.log('par.elemento', par.elemento)
-// })
-
-// setInterval Serve para executar uma função várias vezes a cada tempo especificado, no nosso caso usamos 20 que representa 20% de 1000 milésimos
-// 1 segundo equivale a 1000 milésimos de segundos
-// setInterval( () => {
-//     barreiras.animar()
-// }, 20)
-
-// *** Fim dos testes para o que foi feito até agora  
-
 
 // Function Contrutora do passáro
 
